@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galerie Tietie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Jost:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  /* ==============================================
+     RESET
+     ============================================== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --paper:  #faf9f6;
+    --white:  #ffffff;
+    --sumi:   #1a1815;
+    --ink:    #3a3732;
+    --muted:  #9a9590;
+    --hair:   #d8d4ce;
+    --vermillion: #c2491f;
+    --indigo:  #2c4a6e;
+    --kinari:  #f5f0e8;
+  }
+
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: "Jost", "Noto Serif JP", "Noto Serif SC", "PingFang SC", "Hiragino Mincho ProN", serif;
+    font-weight: 300;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.018'/%3E%3C/svg%3E");
+    background-size: 300px 300px;
+  }
+
+  /* ==============================================
+     SCROLL REVEAL
+     ============================================== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  .container {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 72px;
+  }
+
+  /* ==============================================
+     HERO
+     ============================================== */
+  .hero {
+    padding: 120px 0 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 96px;
+    align-items: end;
+    border-bottom: 1px solid var(--hair);
+    margin-bottom: 80px;
+  }
+  .hero-left .catalog-no {
+    font-family: "Jost", sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  .hero-left h1 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(54px, 7.5vw, 88px);
+    font-weight: 300;
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    color: var(--sumi);
+  }
+  .hero-left .japanese {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-size: clamp(16px, 2vw, 20px);
+    font-weight: 400;
+    color: var(--muted);
+    margin-top: 10px;
+    letter-spacing: 0.04em;
+  }
+  .hero-right {
+    padding-bottom: 8px;
+  }
+  .hero-right .names {
+    font-family: "Jost", sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 2;
+    letter-spacing: 0.04em;
+  }
+  .hero-right .names strong {
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  /* Hero featured artwork */
+  .hero-art {
+    margin-top: 56px;
+    cursor: pointer;
+    position: relative;
+    max-width: 520px;
+  }
+  .hero-art .mat {
+    background: var(--white);
+    padding: 32px 32px 42px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.03);
+    transition: box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hero-art:hover .mat {
+    box-shadow: 0 2px 2px rgba(0,0,0,0.05), 0 8px 24px rgba(0,0,0,0.05);
+    transform: translateY(-3px);
+  }
+  .hero-art .mat img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .hero-art .plate-label {
+    font-family: "Jost", sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: right;
+    margin-top: 10px;
+  }
+
+  /* ==============================================
+     INTRO
+     ============================================== */
+  .intro {
+    max-width: 480px;
+    margin: 0 0 120px;
+    padding: 0;
+  }
+  .intro blockquote {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.65;
+    color: var(--muted);
+    border: none;
+    padding: 0;
+  }
+  .intro .attr {
+    font-family: "Jost", sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--vermillion);
+    margin-top: 14px;
+  }
+
+  /* ==============================================
+     SECTION HEADER
+     ============================================== */
+  .section-head {
+    margin-bottom: 40px;
+    padding-top: 24px;
+  }
+  .section-head .num {
+    font-family: "Jost", sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.22em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .section-head h2 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(24px, 3vw, 34px);
+    font-weight: 400;
+    color: var(--sumi);
+    letter-spacing: 0.01em;
+  }
+
+  /* ==============================================
+     GALLERY — compact 4-col grid
+     Small thumbnails invite clicks
+     ============================================== */
+  .gallery-section {
+    margin-bottom: 120px;
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .gi {
+    cursor: pointer;
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .gi:hover { z-index: 2; transform: translateY(-2px); }
+
+  .gi .mat {
+    background: var(--white);
+    box-shadow: 0 1px 1px rgba(0,0,0,0.03), 0 1px 4px rgba(0,0,0,0.02);
+    transition: box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+    position: relative;
+    padding: 6px;
+  }
+  .gi:hover .mat {
+    box-shadow: 0 2px 2px rgba(0,0,0,0.04), 0 6px 18px rgba(0,0,0,0.04);
+  }
+  .gi .mat img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    background: #fefdfb;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .gi:hover .mat img { transform: scale(1.03); }
+
+  /* Tiny index number on hover */
+  .gi .index {
+    position: absolute;
+    z-index: 3;
+    font-family: "Jost", sans-serif;
+    font-size: 9px;
+    font-weight: 400;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    bottom: 8px;
+    right: 10px;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .gi:hover .index { opacity: 1; }
+
+  /* ==============================================
+     COMING SOON
+     ============================================== */
+  /* Caption below each artwork */
+  .gi .caption {
+    padding: 8px 4px 2px;
+  }
+  .gi .cap-title {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 13px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .gi .cap-medium {
+    font-family: "Jost", sans-serif;
+    font-size: 9px;
+    font-weight: 300;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+  }
+  .gi .cap-note {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 12px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--vermillion);
+    line-height: 1.4;
+    margin-top: 4px;
+    display: none;
+  }
+  .gi:hover .cap-note { display: block; }
+
+  .coming-section {
+    margin-bottom: 120px;
+  }
+  .coming-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .coming-card {
+    aspect-ratio: 4/5;
+    background: var(--white);
+    border: 1px solid var(--hair);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 14px;
+    transition: border-color 0.4s, background 0.4s;
+  }
+  .coming-card:hover {
+    border-color: #c5bfb5;
+    background: #fefefc;
+  }
+  .coming-card .mark {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--hair);
+    line-height: 1;
+    transition: color 0.4s;
+  }
+  .coming-card:hover .mark { color: #c5bfb5; }
+  .coming-card .tag {
+    font-family: "Jost", sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ==============================================
+     BIO — small, off-center
+     ============================================== */
+  .bio-section {
+    margin-bottom: 120px;
+  }
+  .bio-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 20px;
+  }
+  .bio-content {
+    grid-column: 7 / span 5;
+  }
+  .bio-content .eyebrow {
+    font-family: "Jost", sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--vermillion);
+    margin-bottom: 16px;
+  }
+  .bio-content p {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+  .bio-content p strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .bio-pills {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .bio-pills span {
+    font-family: "Jost", sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border: 1px solid var(--hair);
+    color: var(--muted);
+    transition: border-color 0.35s, color 0.35s;
+  }
+  .bio-pills span:hover {
+    border-color: var(--vermillion);
+    color: var(--vermillion);
+  }
+
+  /* ==============================================
+     RULE — Japanese divider
+     ============================================== */
+  .rule {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: auto;
+    margin: 0 0 96px;
+    color: var(--hair);
+  }
+  .rule::before,
+  .rule::after {
+    content: "";
+    height: 1px;
+    background: var(--hair);
+  }
+  .rule::before { width: 40px; }
+  .rule::after  { width: 60px; }
+
+  /* ==============================================
+     FOOTER SECTION — full-width white band
+     ============================================== */
+  .footer-section {
+    background: var(--white);
+    border-top: 1px solid var(--hair);
+    margin-top: 40px;
+  }
+  .footer {
+    padding: 56px 0 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "Jost", sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    color: #b5afa5;
+    text-transform: uppercase;
+  }
+  .footer .footer-logo {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 18px;
+    font-weight: 400;
+    font-style: italic;
+    color: #c5bfb5;
+    text-transform: none;
+    letter-spacing: 0.04em;
+  }
+  .footer .footer-right {
+    text-align: right;
+    line-height: 1.8;
+  }
+
+  /* ==============================================
+     LIGHTBOX — large artwork + description
+     ============================================== */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(18,16,12,0.97);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    opacity: 0;
+    transition: opacity 0.4s;
+    overflow-y: auto;
+    padding: 40px 20px;
+  }
+  .lightbox.active { display: flex; opacity: 1; }
+
+  .lb-mat {
+    background: var(--white);
+    padding: 32px 32px 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    max-width: 86vw;
+    display: flex;
+    flex-direction: column;
+  }
+  .lb-mat img {
+    max-width: 80vw;
+    max-height: 58vh;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* Description panel below artwork */
+  .lb-desc {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--hair);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 40px;
+  }
+  .lb-desc .left {
+    flex: 1;
+  }
+  .lb-desc .plate-num {
+    font-family: "Jost", sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .lb-desc .title {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 22px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--sumi);
+    line-height: 1.3;
+  }
+  .lb-desc .medium {
+    font-family: "Jost", sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    color: var(--muted);
+    margin-top: 6px;
+    letter-spacing: 0.04em;
+  }
+  .lb-desc .right {
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .lb-desc .right .note {
+    font-family: "Jost", sans-serif;
+    font-size: 10px;
+    font-weight: 300;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    line-height: 1.6;
+    max-width: 200px;
+  }
+
+  .lb-counter {
+    font-family: "Jost", sans-serif;
+    font-weight: 300;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    margin-top: 24px;
+    letter-spacing: 0.18em;
+  }
+
+  .lightbox .close {
+    position: fixed;
+    top: 24px;
+    right: 32px;
+    font-family: "Jost", sans-serif;
+    font-weight: 300;
+    font-size: 32px;
+    color: rgba(255,255,255,0.4);
+    cursor: pointer;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s;
+    user-select: none;
+    z-index: 1001;
+  }
+  .lightbox .close:hover { color: rgba(255,255,255,0.85); }
+  .lightbox .nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 300;
+    font-size: 44px;
+    color: rgba(255,255,255,0.3);
+    cursor: pointer;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s;
+    user-select: none;
+    z-index: 1001;
+  }
+  .lightbox .nav:hover { color: rgba(255,255,255,0.85); }
+  .lightbox .nav.prev { left: 20px; }
+  .lightbox .nav.next { right: 20px; }
+
+  /* ==============================================
+     RESPONSIVE
+     ============================================== */
+  @media (max-width: 1024px) {
+    .container { padding: 0 40px; }
+    .hero {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding: 72px 0 52px;
+      margin-bottom: 52px;
+    }
+    .hero-art { max-width: 440px; }
+    .gallery { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .bio-content { grid-column: 5 / span 8; }
+    .lb-desc { flex-direction: column; gap: 16px; }
+    .lb-desc .right { text-align: left; }
+    .lb-desc .right .note { max-width: none; }
+    .lb-mat { padding: 20px 20px 20px; }
+    .lb-mat img { max-width: 80vw; max-height: 50vh; }
+    .footer-section { margin-top: 32px; }
+  }
+
+  @media (max-width: 640px) {
+    .container { padding: 0 20px; }
+    .hero { padding: 40px 0 36px; gap: 28px; margin-bottom: 36px; }
+    .hero-left h1 { font-size: 42px; }
+    .hero-art { max-width: 100%; }
+    .hero-art .mat { padding: 16px 16px 22px; }
+    .gallery { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .gi .mat { padding: 4px; }
+    .coming-row { grid-template-columns: 1fr; }
+    .coming-card { aspect-ratio: 4/1; min-height: 80px; }
+    .bio-content { grid-column: 1 / span 12; }
+    .intro { margin-bottom: 60px; }
+    .gallery-section, .coming-section, .bio-section { margin-bottom: 80px; }
+    .section-head { margin-bottom: 28px; }
+
+    .lb-mat { padding: 14px 14px 16px; max-width: 94vw; }
+    .lb-mat img { max-width: 88vw; max-height: 42vh; }
+    .lb-desc { gap: 12px; }
+    .lb-desc .title { font-size: 18px; }
+    .lightbox .nav { font-size: 28px; width: 36px; height: 36px; }
+    .lightbox .nav.prev { left: 4px; }
+    .lightbox .nav.next { right: 4px; }
+    .lightbox .close { top: 10px; right: 10px; }
+    .footer { flex-direction: column; gap: 12px; text-align: center; }
+    .footer .footer-right { text-align: center; }
+  }
+
+/* ==============================================
+   EDIT MODE
+   ============================================== */
+.edit-toggle {
+  position: fixed; top: 16px; right: 16px; z-index: 999;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--hair); background: var(--white);
+  cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0.5; transition: opacity 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+.edit-toggle:hover { opacity: 1; border-color: var(--vermillion); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.edit-toggle.active { opacity: 1; border-color: var(--vermillion); background: var(--vermillion); color: #fff; }
+
+.edit-actions {
+  position: fixed; top: 16px; right: 60px; z-index: 999;
+  display: none; gap: 6px;
+}
+.edit-actions button {
+  font-family: "Jost", sans-serif; font-size: 10px; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 6px 14px;
+  border: 1px solid var(--hair); background: var(--white);
+  color: var(--ink); cursor: pointer;
+  transition: border-color 0.3s, background 0.3s;
+}
+.edit-actions button:hover { border-color: var(--vermillion); }
+.edit-actions button.save-btn { background: var(--vermillion); color: #fff; border-color: var(--vermillion); }
+.edit-actions button.save-btn:hover { background: #a33a1a; }
+
+body.edit-mode .edit-actions { display: flex; }
+body.edit-mode .gi .caption { outline: 1px dashed rgba(194,73,31,0.15); outline-offset: 2px; transition: outline-color 0.3s; }
+body.edit-mode .gi .caption:hover { outline-color: rgba(194,73,31,0.5); }
+body.edit-mode .gi [contenteditable]:focus { outline: 2px solid var(--vermillion); outline-offset: 2px; background: rgba(194,73,31,0.03); }
+
+.toast {
+  position: fixed; bottom: 32px; left: 50%;
+  transform: translateX(-50%) translateY(20px); z-index: 2000;
+  font-family: "Jost", sans-serif; font-size: 11px; letter-spacing: 0.06em;
+  background: var(--sumi); color: #fff; padding: 10px 24px; border-radius: 2px;
+  opacity: 0; transition: opacity 0.4s, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ==============================================
+   JAPANESE-INSPIRED CHILD-LIKE TOUCHES
+   ============================================== */
+
+/* Softer, warmer accent palette */
+:root {
+  --sakura:    #d4a8a0;
+  --washi:     #f5f0e6;
+  --pencil:    #b8b0a4;
+  --sunlight:  #f0e5d0;
+}
+
+/* Hand-drawn squiggle divider */
+.hand-divider {
+  display: flex; justify-content: center; margin: 0 0 72px; opacity: 0.35;
+}
+.hand-divider svg {
+  width: clamp(120px, 20vw, 200px); height: auto;
+}
+
+/* Hero artwork — gentle float */
+ gentle-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+.hero-art .mat {
+  animation: gentle-float 5s ease-in-out infinite;
+}
+
+/* Artwork accent — small cropped circle */
+.art-accent {
+  display: inline-block; width: 48px; height: 48px;
+  border-radius: 50%; overflow: hidden;
+  border: 2px solid rgba(180,160,140,0.3);
+  vertical-align: middle; margin-right: 10px; flex-shrink: 0;
+}
+.art-accent img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Gallery image — soft rounded corners */
+.gi .mat { border-radius: 3px; }
+.gi .mat img { border-radius: 2px; }
+
+/* Section number — pastel */
+.section-head .num { color: var(--pencil); }
+
+/* Hero subtitle — warmer */
+.hero-left .japanese { color: var(--sakura); }
+
+/* Bio pills — softer */
+.bio-pills span { border-radius: 3px; border-color: var(--pencil); color: var(--pencil); opacity: 0.7; }
+.bio-pills span:hover { border-color: var(--sakura); color: var(--sakura); opacity: 1; }
+
+/* Coming soon cards — softer */
+.coming-card { border-radius: 4px; border-color: rgba(180,160,140,0.2); }
+.coming-card:hover { border-color: rgba(180,160,140,0.4); background: var(--washi); }
+.coming-card .mark { color: rgba(180,160,140,0.25); }
+.coming-card:hover .mark { color: rgba(180,160,140,0.45); }
+
+/* Lightbox — warmer */
+.lb-desc .plate-num { color: var(--sakura); }
+
+/* Footer — warmer */
+.footer { color: var(--pencil); }
+.footer .footer-logo { color: var(--sakura); }
+
+/* Hero featured label */
+.hero-art .plate-label { color: var(--sakura); }
+.hero-left .catalog-no { color: var(--pencil); }
+
+/* Eyebrow */
+.bio-content .eyebrow { color: var(--sakura); }
+
+/* Rule dividers — softer */
+.rule::before, .rule::after { background: rgba(180,160,140,0.2); }
+.rule { color: rgba(180,160,140,0.2); }
+
+/* Intro attribution */
+.intro .attr { color: var(--sakura); }
+
+/* Lightbox chrome — softer */
+.lb-counter { color: rgba(200,180,170,0.4); }
+.lightbox .close { color: rgba(200,180,170,0.4); }
+.lightbox .close:hover { color: rgba(220,200,190,0.85); }
+.lightbox .nav { color: rgba(200,180,170,0.4); }
+.lightbox .nav:hover { color: rgba(220,200,190,0.85); }
+
+</style></head><body>
+
+<!-- EDIT MODE UI -->
+<button class="edit-toggle" id="editToggle" title="Edit mode">&#9998;</button>
+<div class="edit-actions" id="editActions">
+  <button class="save-btn" id="btnExport">Save HTML</button>
+  <button id="btnReset">Reset</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<div class="container">
+
+  <!-- ===========================================
+       HERO
+       =========================================== -->
+
+
+
+
+
+  <section class="hero reveal">
+    <div class="hero-left">
+      <p class="catalog-no">Catalog No. 02 &mdash; Spring 2026</p>
+      <h1>Galerie<br>Tietie</h1>
+      <p class="japanese">鉄鉄の画廊</p>
+    </div>
+    <div class="hero-right">
+      <p class="names">
+        <strong>吕行</strong> &nbsp;Tietie &nbsp;<strong>Jasmine Lü</strong><br>
+        2021, Guangzhou &mdash;<br>
+        Works on paper,<br>
+        twenty-eight plates.
+      </p>
+    </div>
+  </section>
+
+  <div class="hero-art reveal" onclick="openLightbox(0)">
+    <div class="mat">
+      <img src="images/thumbs/thumb_01.jpg" alt="Featured work — Plate 01" loading="eager">
+      <p class="plate-label">Plate 01</p>
+    </div>
+  </div>
+
+  <!-- ===========================================
+       INTRO
+       =========================================== -->
+  <div class="intro reveal">
+    <blockquote>
+      &ldquo;彩虹色的恐龙、会飞的房子、<br>永远笑眯眯的太阳公公。&rdquo;
+    </blockquote>
+    <p class="attr">Tietie, age five</p>
+  </div>
+
+<div class="hand-divider reveal">
+  <svg viewBox="0 0 200 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 10 Q30 4 50 10 Q70 16 90 10 Q110 4 130 10 Q150 16 170 10 Q185 6 190 10" stroke="currentColor" stroke-width="0.8" fill="none" opacity="0.4"/>
+  </svg>
+</div>
+
+  <!-- ===========================================
+       GALLERY — compact thumbnails
+       =========================================== -->
+  <div class="gallery-section">
+    <div class="section-head reveal">
+      <p class="num">Section 01</p>
+<div class="art-accent" style="margin-bottom:12px;"><img src="images/thumbs/thumb_03.jpg" alt=""></div>      <h2>The Collection</h2>
+      <p style="font-family:'Jost',sans-serif;font-size:11px;color:var(--muted);margin-top:8px;font-weight:300;letter-spacing:0.04em;">
+        Click any work to view full size &amp; details
+      </p>
+    </div>
+
+    <div class="gallery reveal" id="gallery"></div>
+  </div>
+
+  <!-- ===========================================
+       COMING SOON
+       =========================================== -->
+  <div class="coming-section">
+    <div class="section-head reveal">
+      <p class="num">Section 02</p>
+      <h2>Forthcoming Works</h2>
+    </div>
+
+    <div class="coming-row reveal">
+      <div class="coming-card">
+        <span class="mark">+</span>
+        <span class="tag">New work in progress</span>
+      </div>
+      <div class="coming-card">
+        <span class="mark">+</span>
+        <span class="tag">More to come</span>
+      </div>
+      <div class="coming-card">
+        <span class="mark">+</span>
+        <span class="tag">Stay tuned</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===========================================
+       BIO
+       =========================================== -->
+<div class="rule reveal"></div>
+  <div class="bio-section">
+    <div class="bio-grid reveal">
+      <div class="bio-content">
+        <p class="eyebrow">About the Artist</p>
+                <p>
+          <strong>吕行</strong>（小名铁铁），2021 年出生于广州。
+          两岁起开始涂鸦，喜欢用水彩、蜡笔和彩铅记录她眼中的世界。
+          她的画里有会飞的房子、长翅膀的鱼、和永远笑着的太阳——
+          那是只有孩子才能看见的宇宙。
+        </p>
+        <div class="bio-pills">
+          <span>Watercolor</span>
+          <span>Crayon</span>
+          <span>Colored Pencil</span>
+          <span>Imagination</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</div><!-- /container -->
+
+  <!-- ===========================================
+       FOOTER — full-width white band
+       =========================================== -->
+  <div class="footer-section reveal">
+    <div class="container">
+      <footer class="footer">
+        <span class="footer-logo">Galerie Tietie</span>
+        <span class="footer-right">&copy; 2026 &mdash; All works by Jasmine Lü<br>Guangzhou</span>
+      </footer>
+    </div>
+  </div>
+
+<!-- ===========================================
+     LIGHTBOX — full image + description
+     =========================================== -->
+<div class="lightbox" id="lightbox">
+  <span class="close" id="lb-close">&times;</span>
+  <span class="nav prev" id="lb-prev">&#8249;</span>
+  <span class="nav next" id="lb-next">&#8250;</span>
+
+  <div class="lb-mat">
+    <img src="" alt="" id="lb-img">
+    <div class="lb-desc">
+      <div class="left">
+        <p class="plate-num" id="lb-plate"></p>
+        <p class="title" id="lb-title"></p>
+        <p class="medium" id="lb-medium"></p>
+      </div>
+      <div class="right">
+        <p class="note" id="lb-note"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lb-counter" id="lb-counter"></div>
+</div>
+
+<!-- ===========================================
+     SCRIPTS
+     =========================================== -->
+<script>
+// ===========================================
+// ARTWORKS DATA
+// To add: append entry with thumb, full, title, medium, note
+// ===========================================
+const artworks = [];
+const titles = [
+  "无题", "彩虹色的梦", "我的家", "太阳公公", "会飞的房子",
+  "花园里", "小动物", "快乐的云朵", "大海", "星空",
+  "公主与城堡", "春天来了", "恐龙世界", "气球飞走了", "妈妈和我",
+  "彩色派对", "我的幼儿园", "小雨滴", "蓝色蝴蝶", "爸爸和我",
+  "树上的小鸟", "海底世界", "向日葵", "下雪天", "粉色的梦",
+  "风中的蒲公英", "月光下", "花裙子"
+];
+const mediums = [
+  "Watercolor on paper", "Crayon on paper", "Colored pencil on paper",
+  "Watercolor & crayon on paper", "Mixed media on paper"
+];
+const notes = [
+  "铁铁说：这是她最喜欢的一张。",
+  "画了很多颜色，每一笔都很认真。",
+  "家里的每个人都在这幅画里。",
+  "太阳永远在笑。",
+  "房子长出了翅膀。",
+  "",
+  "她想养一只小狗。",
+  "",
+  "那次去海边之后画的。",
+  "",
+  "",
+  "",
+  "恐龙比房子还大！",
+  "",
+  "妈妈永远是最漂亮的。",
+  "铁铁说：好多颜色在一起跳舞。",
+  "铁铁说：这是她的幼儿园，有滑滑梯。",
+  "画得很快，说雨滴在排队。",
+  "一只很大的蓝色蝴蝶，翅膀上有花纹。",
+  "爸爸牵着她的手，两个人都笑着。",
+  "铁铁说：小鸟在唱歌。",
+  "好多鱼，还有海草和海星。",
+  "一朵很大很大的向日葵，比太阳还高。",
+  "白色的点点是雪花，她等不及要堆雪人。",
+  "全部都是粉色，她说这是公主的颜色。",
+  "蒲公英飞起来的时候，她追着跑了好远。",
+  "一轮弯弯的月亮，下面有一只小兔子。",
+  "一条有很多花朵的裙子，她说想穿去跳舞。"
+];
+
+for (let i = 1; i <= 28; i++) {
+  artworks.push({
+    thumb: `images/thumbs/thumb_${String(i).padStart(2,'0')}.jpg`,
+    full:  `images/art_${String(i).padStart(2,'0')}.jpg`,
+    title: titles[i-1] || "无题",
+    medium: mediums[i % mediums.length],
+    note: notes[i-1] || "",
+  });
+}
+
+// ===========================================
+// RENDER GALLERY — compact 4-col grid
+// ===========================================
+const gallery = document.getElementById('gallery');
+artworks.forEach((art, i) => {
+  const item = document.createElement('div');
+  item.className = 'gi';
+  item.style.transitionDelay = `${i * 0.03}s`;
+  item.innerHTML = `
+    <div class="mat">
+      <span class="index">${String(i+1).padStart(2,'0')}</span>
+      <img src="${art.thumb}" alt="Plate ${String(i+1).padStart(2,'0')} — ${art.title}" loading="lazy">
+    </div>
+    <div class="caption">
+      <p class="cap-title">${art.title}</p>
+      <p class="cap-medium">${art.medium}</p>
+      ${art.note ? `<p class="cap-note">${art.note}</p>` : ""}
+    </div>
+  `;
+  item.addEventListener('click', (e) => { if (document.body.classList.contains('edit-mode') && e.target.closest('.caption')) return; openLightbox(i); });
+  gallery.appendChild(item);
+});
+
+// ===========================================
+// SCROLL REVEAL
+// ===========================================
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    if (entry.target.id === 'gallery') {
+      Array.from(entry.target.children).forEach((child, i) => {
+        setTimeout(() => {
+          child.style.opacity = '1';
+          child.style.transform = 'translateY(0)';
+        }, i * 50);
+      });
+    }
+    entry.target.classList.add('visible');
+    observer.unobserve(entry.target);
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Init gallery items hidden
+const gs = document.createElement('style');
+gs.textContent = `
+  .gi {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+`;
+document.head.appendChild(gs);
+
+// ===========================================
+// LIGHTBOX
+// ===========================================
+const lb = document.getElementById('lightbox');
+const lbImg = document.getElementById('lb-img');
+const lbPlate = document.getElementById('lb-plate');
+const lbTitle = document.getElementById('lb-title');
+const lbMedium = document.getElementById('lb-medium');
+const lbNote = document.getElementById('lb-note');
+const lbCounter = document.getElementById('lb-counter');
+let currentIdx = 0;
+
+function openLightbox(idx) {
+  currentIdx = idx;
+  updateLightbox();
+  lb.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  lb.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function updateLightbox() {
+  const art = artworks[currentIdx];
+  lbImg.src = art.full;
+  lbPlate.textContent = `Plate ${String(currentIdx + 1).padStart(2,'0')}`;
+  lbTitle.textContent = art.title;
+  lbMedium.textContent = art.medium;
+  lbNote.textContent = art.note;
+  lbCounter.textContent = `${String(currentIdx + 1).padStart(2,'0')} / ${artworks.length}`;
+}
+
+function prevArt() {
+  currentIdx = (currentIdx - 1 + artworks.length) % artworks.length;
+  updateLightbox();
+}
+
+function nextArt() {
+  currentIdx = (currentIdx + 1) % artworks.length;
+  updateLightbox();
+}
+
+document.getElementById('lb-close').addEventListener('click', closeLightbox);
+document.getElementById('lb-prev').addEventListener('click', prevArt);
+document.getElementById('lb-next').addEventListener('click', nextArt);
+lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+document.addEventListener('keydown', e => {
+  if (!lb.classList.contains('active')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') prevArt();
+  if (e.key === 'ArrowRight') nextArt();
+});
+
+// ===========================================
+// EDIT MODE — inline editing with image view
+// ===========================================
+const editToggle = document.getElementById("editToggle");
+const editActions = document.getElementById("editActions");
+const btnExport = document.getElementById("btnExport");
+const btnReset = document.getElementById("btnReset");
+const toast = document.getElementById("toast");
+let editMode = false;
+
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => toast.classList.remove("show"), 2000);
+}
+
+function enterEditMode() {
+  editMode = true;
+  document.body.classList.add("edit-mode");
+  editToggle.classList.add("active");
+  editToggle.innerHTML = "\2714";
+  // Make all caption fields editable
+  document.querySelectorAll(".cap-title, .cap-medium, .cap-note").forEach(el => {
+    el.setAttribute("contenteditable", "true");
+  });
+  showToast("Edit mode ON \2014 click any text to edit");
+}
+
+function exitEditMode(silent) {
+  editMode = false;
+  document.body.classList.remove("edit-mode");
+  editToggle.classList.remove("active");
+  editToggle.innerHTML = "\270E";
+  document.querySelectorAll("[contenteditable]").forEach(el => {
+    el.removeAttribute("contenteditable");
+  });
+  if (!silent) showToast("Edit mode OFF");
+}
+
+editToggle.addEventListener("click", () => {
+  editMode ? exitEditMode() : enterEditMode();
+});
+
+// Keyboard shortcut: E to toggle edit mode
+document.addEventListener("keydown", (e) => {
+  if (e.key === "e" && !e.target.hasAttribute("contenteditable") && !e.ctrlKey && !e.metaKey && !e.altKey) {
+    editMode ? exitEditMode() : enterEditMode();
+  }
+});
+
+// Export: download updated HTML
+btnExport.addEventListener("click", () => {
+  exitEditMode(true);
+  // Strip edit UI from export
+  editToggle.remove();
+  editActions.remove();
+  toast.remove();
+  const html = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+  const blob = new Blob([html], { type: "text/html" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "Galerie_Tietie.html";
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast("Saved! \u2714");
+  // Restore edit UI
+  location.reload();
+});
+
+// Reset: reload original file
+btnReset.addEventListener("click", () => {
+  if (confirm("Discard all edits and reload original file?")) {
+    location.reload();
+  }
+});
+
+// Auto-save to localStorage on each edit
+document.addEventListener("input", (e) => {
+  if (!editMode || !e.target.hasAttribute("contenteditable")) return;
+  // Debounced save
+  clearTimeout(window._saveTimeout);
+  window._saveTimeout = setTimeout(() => {
+    const data = [];
+    document.querySelectorAll(".gi").forEach((gi, i) => {
+      data.push({
+        title: gi.querySelector(".cap-title")?.textContent || "",
+        medium: gi.querySelector(".cap-medium")?.textContent || "",
+        note: gi.querySelector(".cap-note")?.textContent || "",
+      });
+    });
+    try {
+      localStorage.setItem("tietie-edits", JSON.stringify(data));
+    } catch(e) {}
+  }, 500);
+});
+
+// Restore edits from localStorage on load
+(function restoreEdits() {
+  try {
+    const saved = localStorage.getItem("tietie-edits");
+    if (!saved) return;
+    const data = JSON.parse(saved);
+    document.querySelectorAll(".gi").forEach((gi, i) => {
+      if (!data[i]) return;
+      const t = gi.querySelector(".cap-title");
+      const m = gi.querySelector(".cap-medium");
+      const n = gi.querySelector(".cap-note");
+      if (t && data[i].title) t.textContent = data[i].title;
+      if (m && data[i].medium) m.textContent = data[i].medium;
+      if (n && data[i].note) { n.textContent = data[i].note; n.style.display = "block"; }
+      else if (n && !data[i].note) { n.style.display = "none"; }
+    });
+  } catch(e) {}
+})();
+
+</script></body>
+</html>
